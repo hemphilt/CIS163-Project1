@@ -339,13 +339,17 @@ public class CountDownTimer {
 		PrintWriter out = null;
 		try {
 			out = new PrintWriter(new BufferedWriter(new FileWriter(fileName)));
+			out.println(this.hours);
+			out.println(this.minutes);
+			out.println(this.seconds);
 		} catch (IOException e) {
 			throw new IllegalArgumentException();
 		}
-		out.println(this.hours);
-		out.println(this.minutes);
-		out.println(this.seconds);
-		out.close();
+		finally{
+			if (out != null) {
+				out.close();
+			}
+		}
 	}
 
 	public void load(String fileName) {
