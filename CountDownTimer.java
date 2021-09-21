@@ -4,10 +4,10 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Graphical representation of a timer with various controls over the length
+ * A timer with various controls over the length in hours, minutes, and seconds
  *
- * @author Torian Hemphill
- * @version September 15, 2021
+ * @author Torian Hemphill, Getrude Muthiani
+ * @version September 21, 2021
  */
 
 public class CountDownTimer {
@@ -222,6 +222,12 @@ public class CountDownTimer {
 			throw new IllegalArgumentException();
 	}
 
+	/*****************************************************************
+	 * A method that returns whether two CountDownTimers are equal to each other
+	 * 
+	 * @param t1 the first CountDownTimer
+	 * @param t2 the second CountDownTimer
+	 *****************************************************************/
 	public static boolean equals(CountDownTimer t1, CountDownTimer t2) {
 		if ((t1.hours == t2.hours) && (t1.minutes == t2.minutes) && (t1.seconds == t2.seconds)) {
 			return true;
@@ -229,9 +235,21 @@ public class CountDownTimer {
 			return false;
 	}
 
+	/*****************************************************************
+	 * A method that compares a given CountDownTimer to the current CountDownTimer
+	 * 
+	 * @param other a CountDownTimer to compare to the current CountDownTimer
+	 * @return 1 if the current CountDownTimer is bigger than the given
+	 *         CountDownTimer, -1 if the current CountDownTimer is smaller than the
+	 *         given CountDownTimer, 0 if the two CountDownTimers are equal
+	 *****************************************************************/
 	public int compareTo(CountDownTimer other) {
+		// the total time in the other CountDownTimer in seconds
 		int otherTotal = (other.hours * 3600) + (other.minutes * 60) + other.seconds;
+
+		// the total time in the current CountDownTimer in seconds
 		int thisTotal = (this.hours * 3600) + (this.minutes * 60) + this.seconds;
+
 		if (thisTotal > otherTotal) {
 			return 1;
 		}
@@ -241,9 +259,20 @@ public class CountDownTimer {
 			return 0;
 	}
 
+	/*****************************************************************
+	 * A method that compares two CountDownTimers to each other
+	 * 
+	 * @param other a CountDownTimer to compare to the current CountDownTimer
+	 * @return 1 if the first CountDownTimer is bigger than the second, -1 if the
+	 *         first CountDownTimer is smaller than the second, 0 if the two
+	 *         CountDownTimers are equal
+	 *****************************************************************/
 	public static int compareTo(CountDownTimer t1, CountDownTimer t2) {
+		// the total time in the first CountDownTimer in seconds
 		int t1Total = (t1.hours * 3600) + (t1.minutes * 60) + t1.seconds;
+		// the total time in the second CountDownTimer in seconds
 		int t2Total = (t2.hours * 3600) + (t2.minutes * 60) + t2.seconds;
+
 		if (t1Total > t2Total) {
 			return 1;
 		}
@@ -253,6 +282,7 @@ public class CountDownTimer {
 			return 0;
 	}
 
+	/** Decrements the current CountDownTimer by 1 second */
 	public void dec() {
 		if (!isSuspended) {
 			int thisTotal = (this.hours * 3600) + (this.minutes * 60) + this.seconds;
@@ -265,20 +295,39 @@ public class CountDownTimer {
 		}
 	}
 
+	/*****************************************************************
+	 * A method that subtracts a given number of seconds from the current
+	 * CountDownTimer
+	 * 
+	 * @param seconds the number of seconds to be subtracted
+	 * @throws IllegalArgumentException the amount of seconds to be subtracted is
+	 *                                  greater than the total time in the current
+	 *                                  CountDownTimer
+	 *****************************************************************/
 	public void sub(int seconds) {
 		if (!isSuspended) {
 			int thisTotal = (this.hours * 3600) + (this.minutes * 60) + this.seconds;
-			if (seconds > thisTotal)
+			if (seconds < thisTotal) {
+				thisTotal -= seconds;
+				this.hours = (thisTotal / 3600);
+				thisTotal %= 3600;
+				this.minutes = (thisTotal / 60);
+				thisTotal %= 60;
+				this.seconds = (thisTotal);
+			}
+			// given seconds is greater than total time in current CountDownTimer
+			else {
 				throw new IllegalArgumentException();
-			thisTotal -= seconds;
-			this.hours = (thisTotal / 3600);
-			thisTotal %= 3600;
-			this.minutes = (thisTotal / 60);
-			thisTotal %= 60;
-			this.seconds = (thisTotal);
+			}
 		}
 	}
 
+	/*****************************************************************
+	 * A method that subtracts a given CountDownTimer from the current
+	 * CountDownTimer
+	 * 
+	 * @param other the given CountDownTimer to be subtracted
+	 *****************************************************************/
 	public void sub(CountDownTimer other) {
 		if (!isSuspended) {
 			int otherTotal = (other.hours * 3600) + (other.minutes * 60) + other.seconds;
@@ -286,6 +335,7 @@ public class CountDownTimer {
 		}
 	}
 
+	/** Increments the current CountDownTimer by 1 second */
 	public void inc() {
 		if (!isSuspended) {
 			int thisTotal = (this.hours * 3600) + (this.minutes * 60) + this.seconds;
@@ -298,22 +348,38 @@ public class CountDownTimer {
 		}
 	}
 
+	/*****************************************************************
+	 * A method that adds a given number of seconds from the current CountDownTimer
+	 * 
+	 * @param seconds the number of seconds to be added
+	 * @throws IllegalArgumentException the amount of seconds to be added is less
+	 *                                  than zero
+	 *****************************************************************/
 	public void add(int seconds) {
 		if (!isSuspended) {
 			if (seconds > 0) {
 				int thisTotal = (this.hours * 3600) + (this.minutes * 60) + this.seconds;
+
+				// converts the total seconds back into hours, minutes, and seconds
 				thisTotal += seconds;
 				this.hours = (thisTotal / 3600);
 				thisTotal %= 3600;
 				this.minutes = (thisTotal / 60);
 				thisTotal %= 60;
 				this.seconds = (thisTotal);
-			} else
+			}
+			// seconds is less than zero
+			else
 				throw new IllegalArgumentException();
 
 		}
 	}
 
+	/*****************************************************************
+	 * A method that adds a given CountDownTimer from the current CountDownTimer
+	 * 
+	 * @param other the given CountDownTimer to be added
+	 *****************************************************************/
 	public void add(CountDownTimer other) {
 		if (!isSuspended) {
 			int otherTotal = (other.hours * 3600) + (other.minutes * 60) + other.seconds;
@@ -321,12 +387,21 @@ public class CountDownTimer {
 		}
 	}
 
+	/*****************************************************************
+	 * A method that return a string version of the current CountDownTimer
+	 * 
+	 * @return A string equivalent of the current CountDownTimer
+	 *****************************************************************/
 	public String toString() {
 		String countdownString = Integer.toString(this.hours) + ":";
+
+		// adds a zero before the minutes value if it is below ten
 		if (this.minutes < 10) {
 			countdownString = countdownString.concat("0" + Integer.toString(this.minutes) + ":");
 		} else
 			countdownString = countdownString.concat(Integer.toString(this.minutes) + ":");
+
+		// adds a zero before the seconds value if it is below ten
 		if (this.seconds < 10) {
 			countdownString = countdownString.concat("0" + Integer.toString(this.seconds));
 		} else
@@ -335,48 +410,62 @@ public class CountDownTimer {
 		return countdownString;
 	}
 
+	/*****************************************************************
+	 * A method that saves the current CountDownTimer to a file
+	 * 
+	 * @param fileName the name the file should be saved as
+	 * @throws IllegalArgumentException the file cannot be saved properly
+	 *****************************************************************/
 	public void save(String fileName) {
 		PrintWriter out = null;
 		try {
 			out = new PrintWriter(new BufferedWriter(new FileWriter(fileName)));
+			// prints each variable to a line in the file
 			out.println(this.hours);
 			out.println(this.minutes);
 			out.println(this.seconds);
-		} catch (IOException e) {
-			throw new IllegalArgumentException();
 		}
-		finally{
+		// problem reading the file
+		catch (IOException e) {
+			throw new IllegalArgumentException();
+		} finally {
 			if (out != null) {
 				out.close();
 			}
 		}
 	}
 
+	/*****************************************************************
+	 * A method that loads information from the file into the current CountDownTimer
+	 * 
+	 * @param fileName the name of the file to be loaded
+	 * @throws IllegalArgumentException the file cannot be loaded properly
+	 *****************************************************************/
 	public void load(String fileName) {
-
 		try {
 			// open the data file
 			Scanner fileReader = new Scanner(new File(fileName));
+			// sets each variable to the values on the corresponding line of the file
 			setHours(fileReader.nextInt());
-			System.out.println(this.seconds);
 			setMinutes(fileReader.nextInt());
-			System.out.println(this.minutes);
 			setSeconds(fileReader.nextInt());
-			System.out.println(this.seconds);
-
 		}
-
 		// problem reading the file
 		catch (Exception error) {
 			throw new IllegalArgumentException();
 		}
-
 	}
 
+	/*****************************************************************
+	 * A method that sets whether or not the timer is suspended
+	 * 
+	 * @param suspend whether or not the timer is suspended
+	 *****************************************************************/
 	public static void setSuspend(boolean suspend) {
 		isSuspended = suspend;
 	}
 
+	/** returns whether or not the timer is suspended */
 	public static boolean isSuspended() {
 		if (isSuspended)
 			return true;
@@ -384,5 +473,4 @@ public class CountDownTimer {
 			return false;
 
 	}
-
 }
