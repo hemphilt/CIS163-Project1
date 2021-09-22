@@ -91,16 +91,19 @@ public class CountDownTimerPanelSwing extends JPanel {
 	private class StopButtonListener implements ActionListener{
 		public void actionPerformed(ActionEvent event) {
 			try {
+				//	    		System.out.println("Testing");
 				javaTimer.stop();
 			}
 			catch(Exception exception) {
 			}
+
 		}
 	}
 
 	private class ContinueButtonListener implements ActionListener{
 		public void actionPerformed(ActionEvent event) {
 			try {
+				//	    		System.out.println("Testing");
 				javaTimer.restart();
 			}
 			catch(Exception exception) {
@@ -131,39 +134,39 @@ public class CountDownTimerPanelSwing extends JPanel {
 			}
 			catch(Exception exception) {
 			}
-
 		}
 	}
 	
 	private class loadButtonListener implements ActionListener{
 		public void actionPerformed(ActionEvent event) {
 			try {
-				watch.load("project1");
+				
+				watch.load("project1.txt");
+				hourField.setText(String.valueOf(watch.getHours()));
+				minField.setText(String.valueOf(watch.getMin()));
+				secondField.setText(String.valueOf(watch.getSec()));
 			}
 			catch(Exception exception) {
 			}
-
 		}
 	}
 	
 	private class SaveButtonListener implements ActionListener{
 		public void actionPerformed(ActionEvent event) {
 			try {
-				watch.save("project1");
+				
+				watch.save("project1.txt");
+				
 			}
 			catch(Exception exception) {
 			}
-
 		}
 	}
 
 	private class ButtonListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent event) {
-
-
 			if (event.getSource() == startButton) {
-				System.out.println("Testing");
 				int mins, sec, milli;
 				try {
 					mins = Integer.parseInt(hourField.getText());
@@ -177,7 +180,6 @@ public class CountDownTimerPanelSwing extends JPanel {
 					JOptionPane.showMessageDialog(null, "Error in field");
 				}
 			}
-
 			lblTime.setText(watch.toString());
 		}
 	}
