@@ -10,6 +10,7 @@ public class CountDownTimerPanelMainSwing extends JPanel {
 	private JMenuItem suspendItem;
 	private JButton suspendTrue;
 	private JButton suspendFalse;
+	private Timer javaTimer;
 	
 	public CountDownTimerPanelMainSwing(JMenuItem quitItem, JMenuItem suspendItem) {
 		this.quitItem = quitItem;
@@ -37,10 +38,12 @@ public class CountDownTimerPanelMainSwing extends JPanel {
 			if(e.getSource() == quitItem){
 				System.exit(1);
 			}
-			if (e.getSource() == suspendFalse)
+			if (e.getSource() == suspendFalse) {
 				CountDownTimer.setSuspend(false);
-			if (e.getSource() == suspendTrue)
+				System.out.println("not suspended");}
+			if (e.getSource() == suspendTrue) {
 				CountDownTimer.setSuspend(true);
-		}		
+			System.out.println("Suspended");}
+		}	
 	}
 }
