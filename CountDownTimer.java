@@ -417,21 +417,21 @@ public class CountDownTimer {
 	 * @throws IllegalArgumentException the file cannot be saved properly
 	 *****************************************************************/
 	public void save(String fileName) {
-		PrintWriter out = null;
-		try {
-			out = new PrintWriter(new BufferedWriter(new FileWriter(fileName)));
-			// prints each variable to a line in the file
-			out.println(this.hours);
-			out.println(this.minutes);
-			out.println(this.seconds);
-		}
-		// problem reading the file
-		catch (IOException e) {
-			throw new IllegalArgumentException();
-		} finally {
-			if (out != null) {
+		if(isSuspended() == false) {
+			File file = new File("C:/Users/Public/Public Documents/cis_163/"  + fileName );
+			file.getParentFile().mkdirs();
+			try {
+				PrintWriter out = new PrintWriter(file);
+				// prints each variable to a line in the file
+				out.println(this.hours);
+				out.println(this.min);
+				out.println(this.sec);
 				out.close();
 			}
+			// problem reading the file
+			catch (IOException e) {
+				throw new IllegalArgumentException();
+			} 
 		}
 	}
 
@@ -442,19 +442,24 @@ public class CountDownTimer {
 	 * @throws IllegalArgumentException the file cannot be loaded properly
 	 *****************************************************************/
 	public void load(String fileName) {
-		try {
-			// open the data file
-			Scanner fileReader = new Scanner(new File(fileName));
-			// sets each variable to the values on the corresponding line of the file
-			setHours(fileReader.nextInt());
-			setMinutes(fileReader.nextInt());
-			setSeconds(fileReader.nextInt());
-		}
-		// problem reading the file
-		catch (Exception error) {
-			throw new IllegalArgumentException();
+		if(isSuspended() == false) {
+			try {
+				// open the data file
+				File file = new File("C:/Users/Public/Public Documents/cis_163/"  + fileName );
+				Scanner fileReader = new Scanner(file);
+				// sets each variable to the values on the corresponding line of the file
+				setHours(fileReader.nextInt());
+				setMin(fileReader.nextInt());
+				setSec(fileReader.nextInt());
+				fileReader.close();
+			}
+			// problem reading the file
+			catch (Exception error) {
+				throw new IllegalArgumentException();
+			}
 		}
 	}
+
 
 	/*****************************************************************
 	 * A method that sets whether or not the timer is suspended
@@ -462,15 +467,11 @@ public class CountDownTimer {
 	 * @param suspend whether or not the timer is suspended
 	 *****************************************************************/
 	public static void setSuspend(boolean suspend) {
-		isSuspended = suspend;
+		suspended = suspend;	
 	}
 
 	/** returns whether or not the timer is suspended */
 	public static boolean isSuspended() {
-		if (isSuspended)
-			return true;
-		else
-			return false;
-
+		return suspended;
 	}
 }
