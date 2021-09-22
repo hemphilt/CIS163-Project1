@@ -177,26 +177,82 @@ public class CountDownTimer {
 
 		// turns the given string into an array containing the values
 		String[] startTimeArr = startTime.split(":");
+		int hours, minutes, seconds;
 
-		// if the string specifies all three values
-		if (startTimeArr.length == 3) {
-			this.hours = Integer.parseInt(startTimeArr[0]);
-			this.minutes = Integer.parseInt(startTimeArr[1]);
-			this.seconds = Integer.parseInt(startTimeArr[2]);
-		}
-		// if the string specifies only minutes and seconds
-		else if (startTimeArr.length == 2) {
-			this.hours = 0;
-			this.minutes = Integer.parseInt(startTimeArr[0]);
-			this.seconds = Integer.parseInt(startTimeArr[1]);
-		}
-		// if the string specifies only seconds
-		else if (startTimeArr.length == 1) {
-			this.hours = 0;
-			this.minutes = 0;
-			this.seconds = Integer.parseInt(startTimeArr[0]);
-		} else
+		try {
+			// if the string specifies all three values
+			if (startTimeArr.length == 3) {
+
+				hours = Integer.parseInt(startTimeArr[0]);
+				if (hours <= 24 && hours >= 0) {
+					this.hours = hours;
+				}
+				// throws an exception for invalid hours input
+				else {
+					throw new IllegalArgumentException();
+				}
+
+				minutes = Integer.parseInt(startTimeArr[1]);
+				if (minutes <= 60 && minutes >= 0) {
+					this.minutes = minutes;
+				}
+				// throws an exception for invalid minutes input
+				else {
+					throw new IllegalArgumentException();
+				}
+
+				seconds = Integer.parseInt(startTimeArr[2]);
+				if (seconds < 60 && seconds >= 0) {
+					this.seconds = seconds;
+				}
+				// throws an exception for invalid seconds input
+				else {
+					throw new IllegalArgumentException();
+				}
+			}
+
+			// if the string specifies only minutes and seconds
+			else if (startTimeArr.length == 2) {
+				this.hours = 0;
+
+				minutes = Integer.parseInt(startTimeArr[0]);
+				if (minutes <= 60 && minutes >= 0) {
+					this.minutes = minutes;
+				}
+				// throws an exception for invalid minutes input
+				else {
+					throw new IllegalArgumentException();
+				}
+
+				seconds = Integer.parseInt(startTimeArr[1]);
+				if (seconds < 60 && seconds >= 0) {
+					this.seconds = seconds;
+				}
+				// throws an exception for invalid seconds input
+				else {
+					throw new IllegalArgumentException();
+				}
+			}
+
+			// if the string specifies only seconds
+			else if (startTimeArr.length == 1) {
+				this.hours = 0;
+				this.minutes = 0;
+
+				seconds = Integer.parseInt(startTimeArr[0]);
+				if (seconds < 60 && seconds >= 0) {
+					this.seconds = seconds;
+				}
+				// throws an exception for invalid seconds input
+				else {
+					throw new IllegalArgumentException();
+				}
+			} else
+				throw new IllegalArgumentException();
+		} catch (NumberFormatException e) {
 			throw new IllegalArgumentException();
+		}
+
 	}
 
 	/*****************************************************************
@@ -417,21 +473,21 @@ public class CountDownTimer {
 	 * @throws IllegalArgumentException the file cannot be saved properly
 	 *****************************************************************/
 	public void save(String fileName) {
-		if(isSuspended() == false) {
-			File file = new File("C:/Users/Public/Public Documents/cis_163/"  + fileName );
-			file.getParentFile().mkdirs();
-			try {
-				PrintWriter out = new PrintWriter(file);
-				// prints each variable to a line in the file
-				out.println(this.hours);
-				out.println(this.min);
-				out.println(this.sec);
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter(new BufferedWriter(new FileWriter(fileName)));
+			// prints each variable to a line in the file
+			out.println(this.hours);
+			out.println(this.minutes);
+			out.println(this.seconds);
+		}
+		// problem reading the file
+		catch (IOException e) {
+			throw new IllegalArgumentException();
+		} finally {
+			if (out != null) {
 				out.close();
 			}
-			// problem reading the file
-			catch (IOException e) {
-				throw new IllegalArgumentException();
-			} 
 		}
 	}
 
@@ -442,24 +498,19 @@ public class CountDownTimer {
 	 * @throws IllegalArgumentException the file cannot be loaded properly
 	 *****************************************************************/
 	public void load(String fileName) {
-		if(isSuspended() == false) {
-			try {
-				// open the data file
-				File file = new File("C:/Users/Public/Public Documents/cis_163/"  + fileName );
-				Scanner fileReader = new Scanner(file);
-				// sets each variable to the values on the corresponding line of the file
-				setHours(fileReader.nextInt());
-				setMin(fileReader.nextInt());
-				setSec(fileReader.nextInt());
-				fileReader.close();
-			}
-			// problem reading the file
-			catch (Exception error) {
-				throw new IllegalArgumentException();
-			}
+		try {
+			// open the data file
+			Scanner fileReader = new Scanner(new File(fileName));
+			// sets each variable to the values on the corresponding line of the file
+			setHours(fileReader.nextInt());
+			setMinutes(fileReader.nextInt());
+			setSeconds(fileReader.nextInt());
+		}
+		// problem reading the file
+		catch (Exception e) {
+			throw new IllegalArgumentException();
 		}
 	}
-
 
 	/*****************************************************************
 	 * A method that sets whether or not the timer is suspended
@@ -467,11 +518,12 @@ public class CountDownTimer {
 	 * @param suspend whether or not the timer is suspended
 	 *****************************************************************/
 	public static void setSuspend(boolean suspend) {
-		suspended = suspend;	
+		isSuspended = suspend;
 	}
 
 	/** returns whether or not the timer is suspended */
 	public static boolean isSuspended() {
-		return suspended;
+		return isSuspended;
+
 	}
 }
